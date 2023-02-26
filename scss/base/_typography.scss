@@ -1,0 +1,31 @@
+h1 {
+  font-size: 1.5rem;
+  font-weight: 500;
+
+  @include mobile {
+    font-size: 1.25rem;
+  }
+}
+
+h2 {
+  font-size: 1.125rem;
+  font-weight: 500;
+
+  @include mobile {
+    font-size: 1rem;
+  }
+}
+
+h3 {
+  font-size: 1rem;
+  font-weight: 500;
+
+  @include mobile {
+    font-size: 0.875rem;
+  }
+}
+
+h4 {
+  font-size: 0.75rem;
+  font-weight: 400;
+}

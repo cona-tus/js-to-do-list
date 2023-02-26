@@ -1,0 +1,27 @@
+@import 'task-list';
+
+.task-row {
+  position: relative;
+  margin: 2rem 0;
+
+  .task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+
+    .task-select {
+      background-color: transparent;
+      color: $color-gray;
+
+      font: {
+        family: 'Noto Sans KR', sans-serif;
+        size: 0.875rem;
+        weight: 400;
+      }
+
+      text-align: end;
+      text-align-last: right;
+    }
+  }
+}

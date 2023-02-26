@@ -1,0 +1,31 @@
+.task-item {
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $color-white;
+  padding: 1rem;
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.04) 0px 3px 5px;
+
+  &:hover {
+    background-color: $color-light-gray;
+  }
+
+  &:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+
+  .item-desc {
+    color: $color-gray;
+
+    font: {
+      size: 0.75rem;
+      weight: 400;
+    }
+  }
+
+  .fa-solid {
+    color: $color-yellow;
+  }
+}

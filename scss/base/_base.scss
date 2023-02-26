@@ -1,0 +1,65 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: $color-bg;
+  color: $color-black;
+
+  font: {
+    family: 'Noto Sans KR', sans-serif;
+    weight: 400;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+select,
+option,
+input,
+ul,
+li {
+  margin: 0;
+  padding: 0;
+}
+
+ul,
+li {
+  list-style: none;
+}
+
+select::-ms-expand {
+  display: none;
+  outline: 0;
+  border: none;
+}
+
+select {
+  cursor: pointer;
+  -o-appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: 0;
+  border: none;
+}
+
+input {
+  background-color: transparent;
+  outline: 0;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+input:focus {
+  outline: 0;
+  border: none;
+}
