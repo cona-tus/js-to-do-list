@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+    <link rel="stylesheet" href="./css/main.css">
+    <script src="./src/main.js" type="module" defer></script>
+    <title>Stuff</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="inner-container">
+            <div id="modal-container" class="modal-container">
+                <div id="modal" class="modal">
+                    <button id="btn--close" class="modal-close"><i class="fa-solid fa-xmark"></i></button>
+                    <h1 class="modal-header">할 일 노트</h1>
+                    <form id="modal-form" class="modal-form">
+                        <div class="form-control">
+                            <h2>구분</h2>
+                            <div class="radio-container">
+                                <input type="radio" id="backlog" name="category" value="backlog">
+                                <label for="backlog">시작전</label>
+                                <input type="radio" id="progress" name="category" value="progress">
+                                <label for="progress">진행중</label>
+                                <input type="radio" id="complete" name="category" value="complete">
+                                <label for="complete">완료</label>
+                            </div>
+                        </div>
+                        <div class="form-control">
+                            <h2>제목</h2>
+                            <button type="button" id="speech-btn" class="speech-btn"><i
+                                    class="fa-solid fa-microphone"></i></button>
+                            <input id="task-title" type="text" placeholder="할 일을 입력하세요">
+                        </div>
+                        <div class="form-control">
+                            <h2>중요도</h2>
+                            <div class="radio-container">
+                                <input type="radio" id="star-half" name="priority" value="1">
+                                <label for="star-half"><i class="fa-solid fa-star-half"></i></label>
+                                <input type="radio" id="star-stroke" name="priority" value="2">
+                                <label for="star-stroke"><i class="fa-solid fa-star-half-stroke"></i></label>
+                                <input type="radio" id="star-full" name="priority" value="3">
+                                <label for="star-full"><i class="fa-solid fa-star"></i></label>
+                            </div>
+                        </div>
+                        <div class="form-control">
+                            <h2>내용</h2>
+                            <button type="button" id="speech-btn" class="speech-btn"><i
+                                    class="fa-solid fa-microphone"></i></button>
+                            <textarea id="task-description" name="content" placeholder="설명을 입력하세요"></textarea>
+                        </div>
+                        <div id="btn-container" class="btn-container">
+                            <button type="button" id="btn--remove" class="modal-btn remove">
+                                삭제하기
+                            </button>
+                            <button type="submit" id="btn--submit" class="modal-btn submit">저장하기</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="screen">
+                <button id="btn--add" class="add-btn"><i class="fa-solid fa-plus"></i></button>
+                <header class="header">
+                    <p class="title">만나서 반가워요,
+                        <span class="subtitle">오늘 할 일을 해치워 볼까요?</span>
+                    </p>
+                    <div class="date-container">
+                        <span id="date" class="date"></span>
+                        <div class="date-content">
+                            <span id="month" class="month"></span>
+                            <span id="day" class="day"></span>
+                        </div>
+                    </div>
+                </header>
+                <section class="task-info">
+                    <h1 id="total-count" class="total-count"></h1>
+                    <div id="progress-container" class="progress-container">
+                        <div id="progress-bar" class="progress-bar"></div>
+                        <p id="progress-status" class="progress-count"></p>
+                    </div>
+                    <ul class="task-short-list">
+                        <li class="task-short-item">
+                            <h4 class="task-short-title">시작전</h4>
+                            <p class="task-short-count">
+                                <strong id="backlog-count" class="each-count"></strong>tasks
+                            </p>
+                        </li>
+                        <li class="task-short-item">
+                            <h4 class="task-short-title">진행중</h4>
+                            <p class="task-short-count">
+                                <strong id="progress-count" class="each-count"></strong>tasks
+                            </p>
+                        </li>
+                        <li class="task-short-item">
+                            <h4 class="task-short-title">완료</h4>
+                            <p class="task-short-count">
+                                <strong id="complete-count" class="each-count"></strong>tasks
+                            </p>
+                        </li>
+                    </ul>
+                </section>
+                <div class="task-container">
+                    <section class="task-row">
+                        <header class="task-header">
+                            <h2 class="task-title">시작전</h2>
+                            <select class="task-select" onchange="sortTasks(0)">
+                                <option value="created">등록일 순 [기본]</option>
+                                <option value="priority">중요도 순</option>
+                                <option value="alphabetical">제목 순</option>
+                            </select>
+                        </header>
+                        <ul id="backlog-list" class="task-list">
+                        </ul>
+                    </section>
+                    <section class="task-row">
+                        <header class="task-header">
+                            <h2 class="task-title">진행중</h2>
+                            <select class="task-select" onchange="sortTasks(1)">
+                                <option value="created">등록일 순 [기본]</option>
+                                <option value="priority">중요도 순</option>
+                                <option value="alphabetical">제목 순</option>
+                            </select>
+                        </header>
+                        <ul id="progress-list" class="task-list">
+                        </ul>
+                    </section>
+                    <section class="task-row">
+                        <header class="task-header">
+                            <h2 class="task-title">완료</h2>
+                            <select class="task-select" onchange="sortTasks(2)">
+                                <option value="created">등록일 순 [기본]</option>
+                                <option value="priority">중요도 순</option>
+                                <option value="alphabetical">제목 순</option>
+                            </select>
+                        </header>
+                        <ul id="complete-list" class="task-list">
+                        </ul>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
