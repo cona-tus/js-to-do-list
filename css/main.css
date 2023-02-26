@@ -392,8 +392,10 @@ button:active {
   cursor: pointer;
   position: absolute;
   top: 5px;
-  left: 40px;
-  font-size: 1rem; }
+  left: 40px; }
+  .speech-btn .fa-microphone {
+    color: #232831;
+    font-size: 1rem; }
 
 .btn-container {
   position: relative; }
@@ -422,6 +424,7 @@ button:active {
   top: 30px;
   right: 30px; }
   .modal-close .fa-xmark {
+    color: #232831;
     font-size: 1.125rem; }
 
 .hidden {
