@@ -265,22 +265,35 @@ textarea {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  background-color: #ffffff;
-  border: 1px solid #e9ecf5;
-  border-radius: 20px;
+  background: #276ef2;
+  background: linear-gradient(0deg, #276ef2 30%, #4480f0 100%);
+  border-radius: 10px;
   box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px; }
+  .task-info .total-count {
+    color: #ffffff; }
   .task-info .progress-container {
     width: 80%;
     height: 12px;
-    background-color: #e9ecf5;
-    border-radius: 10px; }
+    background-color: #261d84;
+    border-radius: 5px; }
     .task-info .progress-container .progress-bar {
       width: 0%;
       height: 12px;
-      background-color: #276ef2;
-      border-radius: 10px; }
+      position: relative;
+      background-color: #ffffff;
+      border-radius: 5px; }
+      .task-info .progress-container .progress-bar::after {
+        content: '';
+        width: 5px;
+        height: 20px;
+        position: absolute;
+        top: 50%;
+        right: 0;
+        transform: translateY(-50%);
+        border-radius: 1px;
+        background-color: #f3c843; }
     .task-info .progress-container .progress-count {
-      color: #9da2ad;
+      color: #261d84;
       margin-top: 5px;
       font-size: 0.75rem;
       text-align: end; }
@@ -290,11 +303,13 @@ textarea {
     text-align: center; }
     .task-info .task-short-list .task-short-item:nth-child(2) {
       padding: 0 0.938rem;
-      border-left: 1px solid #dce0e3;
-      border-right: 1px solid #dce0e3; }
+      border-left: 1px solid #261d84;
+      border-right: 1px solid #261d84; }
     .task-info .task-short-list .task-short-item .task-short-title {
-      color: #9da2ad; }
+      color: #261d84;
+      font-weight: 500; }
     .task-info .task-short-list .task-short-item .task-short-count {
+      color: #ffffff;
       font-size: 0.875rem;
       font-weight: 400; }
       .task-info .task-short-list .task-short-item .task-short-count .each-count {
