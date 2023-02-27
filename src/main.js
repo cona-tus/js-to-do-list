@@ -224,7 +224,7 @@ const addTask = (event) => {
   taskDesc = taskDescEl.value;
 
   if (!category || !priority || !taskTitle.trim() || !taskDesc.trim()) {
-    alert('Please submit values for all fields.');
+    alert('모든 입력창에 값을 입력해주세요.');
   } else {
     globalContext.task = buildTask(category, taskTitle, priority, taskDesc);
 
