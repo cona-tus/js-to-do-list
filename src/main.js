@@ -40,10 +40,19 @@ function closeModal() {
 
   modal.classList.remove('visible');
   modalForm.reset();
+  isEditMode = false;
 }
 
 function openModal() {
   modal.classList.add('visible');
+
+  console.log(isEditMode);
+
+  if (isEditMode) {
+    removeBtn.classList.remove('hidden');
+  } else {
+    removeBtn.classList.add('hidden');
+  }
 }
 
 // 로컬 스토리지에서 데이터 가져오기
