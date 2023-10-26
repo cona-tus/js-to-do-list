@@ -46,8 +46,6 @@ function closeModal() {
 function openModal() {
   modal.classList.add('visible');
 
-  console.log(isEditMode);
-
   if (isEditMode) {
     removeBtn.classList.remove('hidden');
   } else {
