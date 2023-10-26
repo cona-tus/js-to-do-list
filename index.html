@@ -5,6 +5,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="효율적인 할일 관리 앱, Taskist" />
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Taskist">
+    <meta property="og:image" content="assets/image/taskist-og.jpg">
+    <meta property="og:description" content="효율적인 할일 관리 앱, Taskist">
+    <meta property="og:site_name" content="Taskist">
+    <meta property="og:locale" content="ko_KR">
     <link rel="icon" type="image/ico" href="./assets/image/favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
     <link rel="stylesheet" href="./css/main.css">
@@ -33,8 +40,6 @@
                         </div>
                         <div class="form-control">
                             <h2>제목</h2>
-                            <button type="button" id="speech-btn" class="speech-btn"><i
-                                    class="fa-solid fa-microphone"></i></button>
                             <input id="task-title" type="text" placeholder="할 일을 입력하세요">
                         </div>
                         <div class="form-control">
@@ -55,7 +60,7 @@
                             <textarea id="task-description" name="content" placeholder="설명을 입력하세요"></textarea>
                         </div>
                         <div id="btn-container" class="btn-container">
-                            <button type="button" id="btn--remove" class="modal-btn remove">
+                            <button type="button" id="btn--remove" class="modal-btn remove hidden">
                                 삭제하기
                             </button>
                             <button type="submit" id="btn--submit" class="modal-btn submit">저장하기</button>
