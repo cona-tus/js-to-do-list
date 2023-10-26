@@ -1,10 +1,6 @@
 import getDate from './getDate.js';
-import getCount from './getCount.js';
 import startSpeech from './speechRecognition.js';
-import { openModal, closeModal, modalForm, removeBtn } from './modal.js';
-import globalContext from './globalContext.js';
 
-// DOM element
 const addBtn = document.getElementById('btn--add');
 const closeBtn = document.getElementById('btn--close');
 const taskTitleEl = document.getElementById('task-title');
@@ -15,110 +11,95 @@ const backlogListEl = document.getElementById('backlog-list');
 const progressListEl = document.getElementById('progress-list');
 const completeListEl = document.getElementById('complete-list');
 const taskSelectEls = document.querySelectorAll('.task-select');
-const speechBtns = document.querySelectorAll('.speech-btn');
+const speechBtn = document.getElementById('speech-btn');
+const taskTotalCountEl = document.getElementById('total-count');
+const backlogCountEl = document.getElementById('backlog-count');
+const completeCountEl = document.getElementById('complete-count');
+const progressCountEl = document.getElementById('progress-count');
+const progressStatusEl = document.getElementById('progress-status');
+const progressbarEl = document.getElementById('progress-bar');
+const modal = document.getElementById('modal');
+const modalForm = document.getElementById('modal-form');
+const removeBtn = document.getElementById('btn--remove');
 
-// Get LocalStorage Tasks
-const getSavedTask = () => {
-  globalContext.backlogTasks = localStorage.getItem('backlogItems')
+let backlogTasks = [];
+let progressTasks = [];
+let completeTasks = [];
+let tasks = [];
+let prevTask = null;
+let updatedOnLoad = false;
+let isUpdated = false;
+let isEditMode = false;
+
+// 모달 여닫기
+function closeModal() {
+  if (isUpdated) {
+    removeBtn.classList.add('hidden');
+    isUpdated = false;
+  }
+
+  modal.classList.remove('visible');
+  modalForm.reset();
+}
+
+function openModal() {
+  modal.classList.add('visible');
+}
+
+// 로컬 스토리지에서 데이터 가져오기
+function getSavedTask() {
+  backlogTasks = localStorage.getItem('backlogItems')
     ? JSON.parse(localStorage.getItem('backlogItems'))
     : [];
 
-  globalContext.progressTasks = localStorage.getItem('progressItems')
+  progressTasks = localStorage.getItem('progressItems')
     ? JSON.parse(localStorage.getItem('progressItems'))
     : [];
 
-  globalContext.completeTasks = localStorage.getItem('completeItems')
+  completeTasks = localStorage.getItem('completeItems')
     ? JSON.parse(localStorage.getItem('completeItems'))
     : [];
-};
-
-// Save Tasks in Local Storage
-const saveTasks = () => {
-  globalContext.tasks = [
-    globalContext.backlogTasks,
-    globalContext.progressTasks,
-    globalContext.completeTasks,
-  ];
-  const taskNames = ['backlog', 'progress', 'complete'];
-  taskNames.forEach((taskNames, index) => {
-    localStorage.setItem(
-      `${taskNames}Items`,
-      JSON.stringify(globalContext.tasks[index])
-    );
-  });
-};
-
-// Update Task
-function updateTask(task) {
-  const { id, category, title, priority, desc } = task;
-
-  const categoryArr = Array.from(categoryEls);
-  if (category === 'backlog') {
-    categoryArr.find(
-      (categoryEl) => categoryEl.value === 'backlog'
-    ).checked = true;
-    globalContext.backlogTasks = globalContext.backlogTasks.filter(
-      (backlogTask) => backlogTask.id !== id
-    );
-  } else if (category === 'progress') {
-    categoryArr.find(
-      (categoryEl) => categoryEl.value === 'progress'
-    ).checked = true;
-    globalContext.progressTasks = globalContext.progressTasks.filter(
-      (progressTask) => progressTask.id !== id
-    );
-  } else {
-    categoryArr.find(
-      (categoryEl) => categoryEl.value === 'complete'
-    ).checked = true;
-    globalContext.completeTasks = globalContext.completeTasks.filter(
-      (completeTask) => completeTask.id !== id
-    );
-  }
-
-  const priorityArr = Array.from(priorityEls);
-  if (priority === '1') {
-    priorityArr.find((priorityEl) => priorityEl.value === '1').checked = true;
-  } else if (priority === '2') {
-    priorityArr.find((priorityEl) => priorityEl.value === '2').checked = true;
-  } else {
-    priorityArr.find((priorityEl) => priorityEl.value === '3').checked = true;
-  }
-
-  removeBtn.classList.remove('hidden');
-  removeBtn.onclick = () => removeTask(id);
-
-  taskTitleEl.value = title;
-  taskDescEl.value = desc;
-
-  openModal();
 }
 
-// Remove Task
-const removeTask = (id) => {
-  globalContext.tasks.forEach((taskList) => {
-    taskList = taskList.filter((task) => task.id !== id);
+// 로컬 스토리지에 데이터 저장하기
+function saveTasks() {
+  tasks = [backlogTasks, progressTasks, completeTasks];
+
+  const taskNames = ['backlog', 'progress', 'complete'];
+  taskNames.forEach((taskName, index) => {
+    localStorage.setItem(`${taskName}Items`, JSON.stringify(tasks[index]));
   });
+}
+
+// 할일 삭제
+function removeTask(category, id) {
+  if (category === 'backlog') {
+    backlogTasks = backlogTasks.filter((task) => task.id !== id);
+  } else if (category === 'progress') {
+    progressTasks = progressTasks.filter((task) => task.id !== id);
+  } else if (category === 'complete') {
+    completeTasks = completeTasks.filter((task) => task.id !== id);
+  }
 
   renderTasks();
   closeModal();
-};
+}
 
-// Sort Tasks
+// 할일 목록 정렬
 const sortTasks = (index) => {
   const selectedEl = taskSelectEls[index];
   const selectedOption = selectedEl.options[selectedEl.selectedIndex].value;
 
   if (selectedOption === 'created') {
-    globalContext.tasks[index] = globalContext.tasks[index].sort((a, b) =>
+    tasks[index] = tasks[index].sort((a, b) =>
       a.createdAt > b.createdAt ? 1 : -1
     );
   } else if (selectedOption === 'priority') {
-    globalContext.tasks[index] = globalContext.tasks[index].sort((a, b) =>
+    tasks[index] = tasks[index].sort((a, b) =>
       +a.priority < +b.priority ? 1 : -1
     );
   } else if (selectedOption === 'alphabetical') {
-    globalContext.tasks[index] = globalContext.tasks[index].sort((a, b) =>
+    tasks[index] = tasks[index].sort((a, b) =>
       a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1
     );
   } else {
@@ -130,31 +111,26 @@ const sortTasks = (index) => {
 
 window.sortTasks = sortTasks;
 
-// Generate DOM element
+// 돔 요소 생성
 const generateTaskEl = (categoryDOM, task) => {
   const { title, priority, desc } = task;
 
-  // list item
   const item = document.createElement('li');
   item.classList.add('task-item');
-  item.onclick = () => updateTask(task);
+  item.onclick = () => getPrevTask(task);
 
-  // item content
   const itemContent = document.createElement('div');
   itemContent.classList.add('task-content');
 
-  // item title
   const itemTitle = document.createElement('h3');
   itemTitle.classList.add('item-title');
   itemTitle.textContent =
     title.length > 12 ? `${title.substring(0, 12)}..` : title;
 
-  // item desc
   const itemDesc = document.createElement('p');
   itemDesc.classList.add('item-desc');
   itemDesc.textContent = desc.length > 15 ? `${desc.substring(0, 15)}..` : desc;
 
-  // item priority
   const itemPriority = document.createElement('i');
 
   if (priority === '1') {
@@ -165,137 +141,167 @@ const generateTaskEl = (categoryDOM, task) => {
     itemPriority.classList.add('fa-solid', 'fa-star');
   }
 
-  // append
   itemContent.append(itemTitle, itemDesc);
   item.append(itemContent, itemPriority);
   categoryDOM.appendChild(item);
 };
 
-// Build task
-const buildTask = (category, taskTitle, priority, taskDesc) => {
-  globalContext.task = {
-    id: Math.floor(Math.random() * 1000000),
+// task 구성
+function buildTask(category, taskTitle, priority, taskDesc) {
+  return {
+    id: Math.floor(Math.random() * 1000000000),
     category,
     title: taskTitle,
     priority,
     desc: taskDesc,
     createdAt: new Date(),
   };
+}
 
-  return globalContext.task;
-};
-
-// push
-const pushTasks = (task) => {
+// 배열에 추가
+function pushTasks(task) {
   if (task.category === 'backlog') {
-    globalContext.backlogTasks.push(task);
+    backlogTasks.push(task);
   } else if (task.category === 'progress') {
-    globalContext.progressTasks.push(task);
+    progressTasks.push(task);
   } else {
-    globalContext.completeTasks.push(task);
+    completeTasks.push(task);
   }
-  renderTasks();
-};
 
-// Add
-const addTask = (event) => {
+  renderTasks();
+}
+
+// 이전 정보 가져오기
+function getPrevTask(task) {
+  isEditMode = true;
+  prevTask = task;
+  const { id, category, title, priority, desc } = task;
+
+  const categoryEl = getElement(categoryEls, category);
+  categoryEl.checked = true;
+
+  const priorityEl = getElement(priorityEls, priority);
+  priorityEl.checked = true;
+
+  taskTitleEl.value = title;
+  taskDescEl.value = desc;
+
+  removeBtn.classList.remove('hidden');
+  removeBtn.onclick = () => removeTask(category, id);
+
+  openModal();
+}
+
+function getElement(elements, value) {
+  return Array.from(elements).find((element) => element.value === value);
+}
+
+function updateTasks(category, id) {
+  if (category === 'backlog') {
+    backlogTasks = backlogTasks.filter((task) => task.id !== id);
+  } else if (category === 'progress') {
+    progressTasks = progressTasks.filter((task) => task.id !== id);
+  } else {
+    completeTasks = completeTasks.filter((task) => task.id !== id);
+  }
+}
+
+// form 제출
+function submitForm(event) {
   event.preventDefault();
 
-  let category;
-  let priority;
-  let taskTitle;
-  let taskDesc;
-
-  for (const categoryEl of categoryEls) {
-    if (categoryEl.checked) {
-      category = categoryEl.value;
-      break;
-    }
-  }
-
-  for (const priorityEl of priorityEls) {
-    if (priorityEl.checked) {
-      priority = priorityEl.value;
-      break;
-    }
-  }
-
-  taskTitle = taskTitleEl.value;
-  taskDesc = taskDescEl.value;
+  const category = getValueFromElements(categoryEls);
+  const priority = getValueFromElements(priorityEls);
+  const taskTitle = taskTitleEl.value;
+  const taskDesc = taskDescEl.value;
 
   if (!category || !priority || !taskTitle.trim() || !taskDesc.trim()) {
     alert('모든 입력창에 값을 입력해주세요.');
   } else {
-    globalContext.task = buildTask(category, taskTitle, priority, taskDesc);
+    const task = buildTask(category, taskTitle, priority, taskDesc);
 
-    if (globalContext.task) {
-      pushTasks(globalContext.task);
-      closeModal();
-      modalForm.reset();
+    if (isEditMode) {
+      updateTasks(prevTask.category, prevTask.id);
+      isEditMode = false;
     }
-  }
-};
 
-// Helper Function for Rendering
-const generateImgEl = (index, categoryDOM) => {
+    pushTasks(task);
+    isUpdated = true;
+    closeModal();
+    modalForm.reset();
+  }
+}
+
+function getValueFromElements(elements) {
+  const element = Array.from(elements).find((element) => element.checked);
+  return element ? element.value : null;
+}
+
+// 이미지 렌더링 보조
+function generateImgEl(index, categoryDOM) {
   const entryImg = document.createElement('img');
   entryImg.setAttribute('src', `../assets/image/people0${index}.png`);
   entryImg.classList.add('entry-img');
   categoryDOM.appendChild(entryImg);
-};
+}
 
-// Render Tasks
-const renderTasks = () => {
-  if (!globalContext.updatedOnLoad) {
+// 통계
+function getCount() {
+  progressbarEl.style.width = '';
+
+  let backlogCount = backlogTasks.length;
+  let progressCount = progressTasks.length;
+  let completeCount = completeTasks.length;
+
+  backlogCountEl.textContent = backlogCount;
+  progressCountEl.textContent = progressCount;
+  completeCountEl.textContent = completeCount;
+
+  let totalCount = +backlogCount + +progressCount + +completeCount;
+  taskTotalCountEl.textContent = `${+totalCount} Tasks`;
+
+  progressStatusEl.textContent = `${completeCount} / ${totalCount}`;
+
+  let percentage = (completeCount / totalCount) * 100;
+  progressbarEl.style.width = `${percentage}%`;
+}
+
+// 할일 렌더링
+function renderTasks() {
+  if (!updatedOnLoad) {
     getSavedTask();
   }
 
-  if (globalContext.backlogTasks.length === 0) {
-    backlogListEl.textContent = '';
-    generateImgEl(1, backlogListEl);
-  } else {
-    backlogListEl.textContent = '';
-  }
-  globalContext.backlogTasks.forEach((backlogItem) => {
-    generateTaskEl(backlogListEl, backlogItem);
-  });
+  renderCategoryTasks(backlogTasks, backlogListEl, 1);
+  renderCategoryTasks(progressTasks, progressListEl, 2);
+  renderCategoryTasks(completeTasks, completeListEl, 3);
 
-  if (globalContext.progressTasks.length === 0) {
-    progressListEl.textContent = '';
-    generateImgEl(2, progressListEl);
-  } else {
-    progressListEl.textContent = '';
-  }
-  globalContext.progressTasks.forEach((progressItem) => {
-    generateTaskEl(progressListEl, progressItem);
-  });
-
-  if (globalContext.completeTasks.length === 0) {
-    completeListEl.textContent = '';
-    generateImgEl(3, completeListEl);
-  } else {
-    completeListEl.textContent = '';
-  }
-  globalContext.completeTasks.forEach((completeItem) => {
-    generateTaskEl(completeListEl, completeItem);
-  });
-
-  globalContext.updatedOnLoad = true;
+  updatedOnLoad = true;
   saveTasks();
   getCount();
-};
+}
 
-const init = () => {
+function renderCategoryTasks(categoryTasks, categoryDOM, index) {
+  if (categoryTasks.length === 0) {
+    categoryDOM.textContent = '';
+    generateImgEl(index, categoryDOM);
+  } else {
+    categoryDOM.textContent = '';
+  }
+
+  categoryTasks.forEach((task) => {
+    generateTaskEl(categoryDOM, task);
+  });
+}
+
+function init() {
   getDate();
   renderTasks();
-};
+}
 
-// EventListners
 addBtn.addEventListener('click', openModal);
 closeBtn.addEventListener('click', closeModal);
-modalForm.addEventListener('submit', addTask);
-speechBtns.forEach((speechBtn) => {
-  speechBtn.addEventListener('click', startSpeech);
-});
+modalForm.addEventListener('submit', submitForm);
+speechBtn.addEventListener('click', startSpeech);
 
 init();
