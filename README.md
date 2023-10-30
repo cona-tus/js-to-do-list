@@ -1,4 +1,4 @@
-# ☑️ 효율적인 투두리스트 앱, 'Taskist' 프로젝트
+# ✔️ 효율적인 투두리스트 앱, 'Taskist' 프로젝트
 
 ![taskist-thumb](https://github.com/cona-tus/js-to-do-list/assets/90844424/ca82c8de-bd70-4a46-9148-bf8f0b31957b)
 
