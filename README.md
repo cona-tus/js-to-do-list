@@ -34,13 +34,13 @@ Taskist는 투두리스트 웹 애플리케이션으로, 사용자가 할일을 
 
 ## 3. Main Features
 
-1. [로컬스토리지 데이터 처리]()
-2. [할일 생성]()
-3. [화면에 렌더링]()
-4. [할일 업데이트]()
-5. [할일 삭제]()
-6. [할일 목록 정렬]()
-7. [음성 인식]()
+1. [로컬스토리지 데이터 처리](#3-1-handle-local-storage-data)
+2. [할일 생성](#3-2-create-a-new-task)
+3. [화면에 렌더링](#3-3-render-tasks)
+4. [할일 업데이트](#3-4-update-task)
+5. [할일 삭제](#3-5-remove-tasks)
+6. [할일 목록 정렬](#3-6-sort-tasks)
+7. [음성 인식](#3-7-speech-to-text-using-web-speech-api)
 
 <br/>
 
@@ -407,7 +407,7 @@ window.sortTasks = sortTasks;
 
 ### 3-7. Speech-to-Text using Web Speech API
 
-![taskist-speech](https://user-images.githubusercontent.com/90844424/221486559-74adedb1-62ad-44e8-9293-d1c1b8fe4832.gif)
+![taskist-speech](https://github.com/cona-tus/js-to-do-list/assets/90844424/490a24bf-aaf8-4f09-b029-79e14f3a5a6e)
 
 Taskist는 사용자의 편의를 위해 음성 받아쓰기 기능을 제공합니다. 마이크 버튼을 클릭하면 음성 인식이 시작됩니다. 이를 구현하기 위해 `Web Speech API`를 사용합니다. `startSpeech()` 함수는 음성을 텍스트로 변환하여 지정된 입력 필드에 자동으로 입력하는 역할을 합니다.
 
@@ -576,4 +576,4 @@ function openModal() {
 <br/>
 <br/>
 
-[맨위로 이동하기]()
+[맨위로 이동하기](#-효율적인-투두리스트-앱-taskist-프로젝트)
